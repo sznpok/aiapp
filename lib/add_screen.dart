@@ -30,42 +30,51 @@ class AddChemicalState extends State<AddChemicalScreen> {
 
   func(String title) async {
     String apiKey = "AIzaSyA4v1UgPMacCmrRQb658NbY6B5DPe1-msE";
-    Platform.environment["AIzaSyA4v1UgPMacCmrRQb658NbY6B5DPe1-msE"];
+    // Platform.environment["AIzaSyA4v1UgPMacCmrRQb658NbY6B5DPe1-msE"];
     if (apiKey.isEmpty) {
       log('No \$API_KEY environment variable');
     }
     // For text-only input, use the gemini-pro model
     final model = GenerativeModel(
-        model: 'gemini-pro',
-        apiKey: apiKey,
-        generationConfig: GenerationConfig(maxOutputTokens: 100));
-    final chat = model.startChat(
-        /*history: [
-        Content.text('Hello, I have 2 dogs in my house.'),
-        Content.model(
-            [TextPart('Great to meet you. What would you like to know?')])
-      ],*/
-        );
-    var content = Content.text(title);
-    responseResponse = await chat.sendMessage(content);
-    var benefitsContent =
-        Content.text("Give me the benefits for this compound$title");
-    benefitsResponse = await chat.sendMessage(benefitsContent);
-    var medicalContent =
-        Content.text("Give me the medical uses for this compound$title");
-    medicalUsesResponse = await chat.sendMessage(medicalContent);
-    var localContent =
-        Content.text("Give me local name for this compound$title");
-    localNameResponse = await chat.sendMessage(localContent);
-    var chemicalFoundContent =
-        Content.text("Give me the chemical found  this compound$title");
-    chemicalFoundResponse = await chat.sendMessage(chemicalFoundContent);
-    var sciContent =
-        Content.text("Give me the scientific name for this compound$title");
-    scientificNameResponse = await chat.sendMessage(sciContent);
-    var proContent =
-        Content.text("Give me the properties for this compound$title");
-    propertiesResponse = await chat.sendMessage(proContent);
+      model: 'gemini-pro',
+      apiKey: apiKey,
+    );
+
+    String prompt = "write a story about a magic book";
+    final content = [Content.text(prompt)];
+    final rep = await model.generateContent(content);
+    log(rep.text.toString());
+
+    //benefits
+    var benefits = "Give me the benefits for this compound$title";
+    final benefitsContent = [Content.text(benefits)];
+    benefitsResponse = await model.generateContent(benefitsContent);
+    log(benefitsResponse!.text.toString());
+
+    //medical uses
+    var medical = "Give me the medical uses for this compound$title";
+    final medicalContent = [Content.text(medical)];
+    medicalUsesResponse = await model.generateContent(medicalContent);
+
+    //local name
+    var local = "Give me local name for this compound$title";
+    final localContent = [Content.text(local)];
+    localNameResponse = await model.generateContent(localContent);
+
+    //chemical found
+    var chemicalFound = "Give me the chemical found  this compound$title";
+    final chemicalFoundContent = [Content.text(chemicalFound)];
+    chemicalFoundResponse = await model.generateContent(chemicalFoundContent);
+
+    //sci name
+    var sci = "Give me the scientific name for this compound$title";
+    final sciContent = [Content.text(sci)];
+    scientificNameResponse = await model.generateContent(sciContent);
+
+    //properites
+    var pro = "Give me the properties for this compound$title";
+    final proContent = [Content.text(pro)];
+    propertiesResponse = await model.generateContent(proContent);
   }
 
   @override
@@ -111,7 +120,7 @@ class AddChemicalState extends State<AddChemicalScreen> {
                 onPressed: () async {
                   func(controller.text);
                   Timer(
-                    const Duration(seconds: 3),
+                    const Duration(seconds: 10),
                     () => Navigator.push(
                       context,
                       MaterialPageRoute(
