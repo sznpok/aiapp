@@ -10,9 +10,9 @@ class MyHomePage extends StatelessWidget {
 
   //String apiKey = "AIzaSyA4v1UgPMacCmrRQb658NbY6B5DPe1-msE";
 
-  func() async {
+  func(String title) async {
     String apiKey = "AIzaSyA4v1UgPMacCmrRQb658NbY6B5DPe1-msE";
-    // Platform.environment["AIzaSyA4v1UgPMacCmrRQb658NbY6B5DPe1-msE"];
+    Platform.environment["AIzaSyA4v1UgPMacCmrRQb658NbY6B5DPe1-msE"];
     if (apiKey.isEmpty) {
       log('No \$API_KEY environment variable');
     }
@@ -21,7 +21,6 @@ class MyHomePage extends StatelessWidget {
         model: 'gemini-pro',
         apiKey: apiKey,
         generationConfig: GenerationConfig(maxOutputTokens: 100));
-    // Initialize the chat
     final chat = model.startChat(
       history: [
         Content.text('Hello, I have 2 dogs in my house.'),
@@ -29,7 +28,7 @@ class MyHomePage extends StatelessWidget {
             [TextPart('Great to meet you. What would you like to know?')])
       ],
     );
-    var content = Content.text('How many paws are in my house?');
+    var content = Content.text(title);
     var response = await chat.sendMessage(content);
     log(response.text.toString());
   }
@@ -41,7 +40,9 @@ class MyHomePage extends StatelessWidget {
       backgroundColor: Colors.lightBlueAccent,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          func();
+          func(
+            "",
+          );
         },
       ),
       appBar: AppBar(
