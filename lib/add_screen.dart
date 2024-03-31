@@ -40,11 +40,6 @@ class AddChemicalState extends State<AddChemicalScreen> {
       apiKey: apiKey,
     );
 
-    String prompt = "write a story about a magic book";
-    final content = [Content.text(prompt)];
-    final rep = await model.generateContent(content);
-    log(rep.text.toString());
-
     //benefits
     var benefits = "Give me the benefits for this compound$title";
     final benefitsContent = [Content.text(benefits)];
@@ -55,26 +50,31 @@ class AddChemicalState extends State<AddChemicalScreen> {
     var medical = "Give me the medical uses for this compound$title";
     final medicalContent = [Content.text(medical)];
     medicalUsesResponse = await model.generateContent(medicalContent);
+    log(medicalUsesResponse!.text.toString());
 
     //local name
     var local = "Give me local name for this compound$title";
     final localContent = [Content.text(local)];
     localNameResponse = await model.generateContent(localContent);
+    log(localNameResponse!.text.toString());
 
     //chemical found
     var chemicalFound = "Give me the chemical found  this compound$title";
     final chemicalFoundContent = [Content.text(chemicalFound)];
     chemicalFoundResponse = await model.generateContent(chemicalFoundContent);
+    log(chemicalFoundResponse!.text.toString());
 
     //sci name
     var sci = "Give me the scientific name for this compound$title";
     final sciContent = [Content.text(sci)];
     scientificNameResponse = await model.generateContent(sciContent);
+    log(scientificNameResponse!.text.toString());
 
     //properites
     var pro = "Give me the properties for this compound$title";
     final proContent = [Content.text(pro)];
     propertiesResponse = await model.generateContent(proContent);
+    log(propertiesResponse!.text.toString());
   }
 
   @override
@@ -117,25 +117,39 @@ class AddChemicalState extends State<AddChemicalScreen> {
                 height: 12,
               ),
               TextButton(
-                onPressed: () async {
+                onPressed: () {
                   func(controller.text);
-                  Timer(
-                    const Duration(seconds: 10),
+
+                  /*Timer(
+                    const Duration(seconds: 3),
                     () => Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => DetailScreen(
-                          benefits: benefitsResponse!.text ?? "",
-                          chemicalFormula: controller.text ?? "",
-                          chemicalFound: chemicalFoundResponse!.text ?? "",
-                          localName: localNameResponse!.text ?? "",
-                          medicalUses: medicalUsesResponse!.text ?? "",
-                          properties: propertiesResponse!.text ?? "",
-                          scientificName: scientificNameResponse!.text ?? "",
+                          benefits: benefitsResponse?.text != null
+                              ? benefitsResponse!.text
+                              : "",
+                          chemicalFormula: controller.text,
+                          chemicalFound: chemicalFoundResponse?.text != null
+                              ? chemicalFoundResponse!.text
+                              : "",
+                          localName: localNameResponse?.text != null
+                              ? localNameResponse!.text
+                              : "",
+                          medicalUses: medicalUsesResponse?.text != null
+                              ? medicalUsesResponse!.text
+                              : "",
+                          properties: propertiesResponse?.text != null
+                              ? propertiesResponse!.text
+                              : "",
+                          scientificName: scientificNameResponse?.text != null
+                              ? scientificNameResponse!.text
+                              : "",
                         ),
                       ),
                     ),
-                  );
+                  );*/
+
                   /*await Navigator.push(
                     context,
                     MaterialPageRoute(
