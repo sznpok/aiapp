@@ -24,7 +24,7 @@ class DetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    // TODO: implement buildif (localName != null)
     return Scaffold(
       appBar: AppBar(
         title: const Text('Chemical Compound Details'),
@@ -32,34 +32,45 @@ class DetailScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            CardWidget(
-              title: "Chemical Formula",
-              des: chemicalFormula,
-            ),
-            CardWidget(
-              title: "Local Name",
-              des: localName,
-            ),
-            CardWidget(
-              title: "Scientific Name",
-              des: scientificName,
-            ),
-            CardWidget(
-              title: "Chemical Found",
-              des: chemicalFound,
-            ),
-            CardWidget(
-              title: "Properties",
-              des: properties,
-            ),
-            CardWidget(
-              title: "Benefits",
-              des: benefits,
-            ),
-            CardWidget(
-              title: "Medical Uses",
-              des: medicalUses,
-            ),
+            if (chemicalFormula != null)
+              CardWidget(
+                title: "Chemical Formula",
+                des: chemicalFormula!,
+              ),
+            if (localName != null)
+              CardWidget(
+                title: "Local Name",
+                des: localName!,
+              ),
+            // CardWidget(
+            //   title: "Local Name",
+            //   des: localName!,
+            // ),
+            if (scientificName != null)
+              CardWidget(
+                title: "Scientific Name",
+                des: scientificName!,
+              ),
+            if (chemicalFound != null)
+              CardWidget(
+                title: "Chemical Found",
+                des: chemicalFound!,
+              ),
+            if (properties != null)
+              CardWidget(
+                title: "Properties",
+                des: properties!,
+              ),
+            if (benefits != null)
+              CardWidget(
+                title: "Benefits",
+                des: benefits!,
+              ),
+            if (medicalUses != null)
+              CardWidget(
+                title: "Medical Uses",
+                des: medicalUses!,
+              ),
           ],
         ),
       ),
