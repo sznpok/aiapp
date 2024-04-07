@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:aiapp/chemical_List.dart';
+import 'package:aiapp/data.dart';
 import 'package:aiapp/detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
@@ -79,52 +81,52 @@ class AddChemicalState extends State<AddChemicalScreen> {
   //   log(propertiesResponse!.text.toString());
   // }
 
-  func(String title) async {
-    try {
-      String apiKey =
-          "AIzaSyA4v1UgPMacCmrRQb658NbY6B5DPe1-msE"; // Fetch API key securely
-      if (apiKey.isEmpty) {
-        log(apiKey.toString());
-        return;
-      }
+  // func(String title) async {
+  //   try {
+  //     String apiKey =
+  //         "AIzaSyA4v1UgPMacCmrRQb658NbY6B5DPe1-msE"; // Fetch API key securely
+  //     if (apiKey.isEmpty) {
+  //       log(apiKey.toString());
+  //       return;
+  //     }
 
-      final model = GenerativeModel(
-        model: 'gemini-pro',
-        apiKey: apiKey,
-      );
+  //     final model = GenerativeModel(
+  //       model: 'gemini-pro',
+  //       apiKey: apiKey,
+  //     );
 
-      benefitsResponse =
-          await generateContentWithTitle(model, "benefits", title);
-      medicalUsesResponse =
-          await generateContentWithTitle(model, "medical uses", title);
-      localNameResponse =
-          await generateContentWithTitle(model, "local name", title);
-      chemicalFoundResponse =
-          await generateContentWithTitle(model, "chemical found", title);
-      scientificNameResponse =
-          await generateContentWithTitle(model, "scientific name", title);
-      propertiesResponse =
-          await generateContentWithTitle(model, "properties", title);
-    } catch (e) {
-      log('Error fetching content: $e');
-      // Handle the error gracefully (e.g., display error message to the user)
-    }
-  }
+  //     benefitsResponse =
+  //         await generateContentWithTitle(model, "benefits", title);
+  //     medicalUsesResponse =
+  //         await generateContentWithTitle(model, "medical uses", title);
+  //     localNameResponse =
+  //         await generateContentWithTitle(model, "local name", title);
+  //     chemicalFoundResponse =
+  //         await generateContentWithTitle(model, "chemical found", title);
+  //     scientificNameResponse =
+  //         await generateContentWithTitle(model, "scientific name", title);
+  //     propertiesResponse =
+  //         await generateContentWithTitle(model, "properties", title);
+  //   } catch (e) {
+  //     log('Error fetching content: $e');
+  //     // Handle the error gracefully (e.g., display error message to the user)
+  //   }
+  // }
 
-  Future<GenerateContentResponse> generateContentWithTitle(
-      GenerativeModel model, String category, String title) async {
-    var content = "Give me the $category for this compound $title";
-    final response = await model.generateContent([Content.text(content)]);
-    log('Response for $category: ${response.text}');
-    return response;
-  }
+  // Future<GenerateContentResponse> generateContentWithTitle(
+  //     GenerativeModel model, String category, String title) async {
+  //   var content = "Give me the $category for this compound $title";
+  //   final response = await model.generateContent([Content.text(content)]);
+  //   log('Response for $category: ${response.text}');
+  //   return response;
+  // }
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    controller.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   // TODO: implement dispose
+  //   controller.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -132,6 +134,28 @@ class AddChemicalState extends State<AddChemicalScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Chemical Formula'),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Colors.blue,
+        label: Row(
+          children: [
+            Text(
+              'See  ALl',
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Icon(
+              Icons.list,
+              color: Colors.white,
+            )
+          ],
+        ),
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => ChemicalList()));
+        },
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -160,74 +184,36 @@ class AddChemicalState extends State<AddChemicalScreen> {
               ),
               TextButton(
                 onPressed: () async {
-                  func(controller.text);
+                  bool foundData = false;
+                  for (var i = 0; i < chemicalData.length; i++) {
+                    var chemical = chemicalData[i];
 
-                  // Timer(
-                  //   const Duration(seconds: 3),
-                  //   () => Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //       builder: (context) => DetailScreen(
-                  //         benefits: benefitsResponse?.text != null
-                  //             ? benefitsResponse!.text
-                  //             : "",
-                  //         chemicalFormula: controller.text,
-                  //         chemicalFound: chemicalFoundResponse?.text != null
-                  //             ? chemicalFoundResponse!.text
-                  //             : "",
-                  //         localName: localNameResponse?.text != null
-                  //             ? localNameResponse!.text
-                  //             : "",
-                  //         medicalUses: medicalUsesResponse?.text != null
-                  //             ? medicalUsesResponse!.text
-                  //             : "",
-                  //         properties: propertiesResponse?.text != null
-                  //             ? propertiesResponse!.text
-                  //             : "",
-                  //         scientificName: scientificNameResponse?.text != null
-                  //             ? scientificNameResponse!.text
-                  //             : "",
-                  //       ),
-                  //     ),
-                  //   ),
-                  // );
+                    if (controller.text.toLowerCase().trim() ==
+                            chemical.scientificName.toLowerCase().trim() ||
+                        chemical.commanName.toLowerCase().split(', ').any(
+                            (name) =>
+                                controller.text.toLowerCase().trim() ==
+                                name.toLowerCase().trim())) {
+                      foundData = true;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              DetailScreen(screenData: chemical),
+                        ),
+                      );
+                      break; // Exit the loop once a match is found
+                    }
+                  }
 
-                  // response = "".toString();
-                  // get response => "";
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DetailScreen(
-                        // benefits: "",
-                        // //chemicalFormula: response!.text,
-                        // chemicalFormula: response!.text ?? "",
-                        // // chemicalFormula:
-                        // //     response.isNotEmpty ? response : "Default Text",
-                        // chemicalFound: "",
-                        // localName: "",
-                        // medicalUses: "",
-                        // properties: "",
-                        // scientificName: "",
-
-                        // benefits: "",
-                        // chemicalFormula: response,
-                        // chemicalFound: "",
-                        // localName: "",
-                        // medicalUses: "",
-                        // properties: "",
-                        // scientificName: "",
-
-                        benefits: benefitsResponse?.text!.toString(),
-                        chemicalFormula: controller.text.toString(),
-                        chemicalFound: chemicalFoundResponse?.text!.toString(),
-                        localName: localNameResponse?.text!.toString(),
-                        medicalUses: medicalUsesResponse?.text!.toString(),
-                        properties: propertiesResponse?.text!.toString(),
-                        scientificName:
-                            scientificNameResponse?.text!.toString(),
+                  if (!foundData) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: Colors.red,
+                        content: Text('Sorry, we could not find your data.'),
                       ),
-                    ),
-                  );
+                    );
+                  }
                 },
                 style: TextButton.styleFrom(
                   foregroundColor: Colors.white,
